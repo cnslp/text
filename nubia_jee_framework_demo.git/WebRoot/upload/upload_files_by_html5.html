@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title></title>
+</head>
+<body>
+    <form id="uploadForm" enctype="multipart/form-data" method="post" action="upload_file_by_html5.do">
+        <input type="file" name="Filedata" id="fileToUpload" multiple="multiple"> <br> 
+        <input type="text" name="username" id="username" value="jxva"> <br> 
+        <input type="text" name="password" id="password" value="123456"> <br> 
+        <input type="button" onclick="uploadFile();" value="Upload">
+    </form>
+    <ul></ul>
+    <script src="../res/js/jquery.js"></script>
+    <script>
+        function uploadFile() {
+            if (window.File && window.FileList) {
+                var fd = new FormData();
+                var files = document.getElementById('fileToUpload').files;
+                for (var i = 0; i < files.length; i++) {
+                    fd.append("file" + i, files[i]);
+                }
+                fd.append("username", document.getElementById('username').value);  
+                fd.append("password", document.getElementById('password').value);  
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function(e) {
+                    $('<li>' + e.target.responseText + '</li>').appendTo('ul');
+                }
+                xhr.open("POST", document.getElementById('uploadForm').action);
+                xhr.send(fd);
+            } else {
+                document.getElementById('uploadForm').submit(); //don't use html5
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	<form>
+			<span style="float:left;_margin:3px;">
+				<input name="picUrl" readonly="readonly" style="width:300px;" id="picUrl">
+			</span>    
+			<span class="browser" id="upload"></span>
+	</form>
+<script src="../res/js/jquery.js"></script>
+<script src="../res/js/jquery.flash.js"></script>
+<script>
+$(function(){
+    $('#upload').flash({ 
+        src: '../res/swf/upload',
+        id: 'demo',
+        name:'demo',
+        flashvars: {
+    		'uploadUrl':'/upload/upload_files_by_flash.do?username=tom%26password=fff',
+    		'callback':'uploadCallback',
+        	'fileCount':100,
+        	'fileSize':1024*200,
+        	'fileType':'Allow Files (*.jpg,*.jpeg,*.gif,*.png,*.7z,*.rar,*.zip,*.pdf,*.apk)',
+        	'flashvars':'username=jxva&password=123456'
+        },
+        width: 80,
+        height:20,
+        wmode:"opaque",
+        allowScriptAccess: "always"
+    });
+});
+function uploadCallback(result){
+	$('#picUrl').val(result);
+}
+</script>
+</body>
+</html>

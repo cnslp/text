@@ -1,0 +1,61 @@
+
+
+<script>
+function win(title,url,width,height,callback){
+    $(document.body).popup({
+        buttons: {
+            Apply: function(){
+                if(callback){
+                    callback.apply(this, arguments);
+                }else{
+                    $('#popup_iframe')[0].contentWindow.apply();   
+                }
+            },
+            Cancel: function(){
+                $(document.body).popup({close:true});
+            }                              
+        },
+        title:title,
+        url:url,
+        width:width,
+        height:height
+    });
+}
+
+function tip(type,text,callback){   
+    $(document.body).popup({
+        splash:true,
+        type:type,
+        title:type==-1?'Warning':(type==2?'Confirm':'Tips'),
+        text:text
+    },callback);
+}
+
+    function add_sms(title,url,width,height,callback){
+    $(document.body).popup({
+        buttons: {
+            Send: function(){
+                if(callback){
+                    callback.apply(this, arguments);
+                }else{
+                    $('#popup_iframe')[0].contentWindow.send();   
+                }
+            },
+            Save: function(){
+                if(callback){
+                    callback.apply(this, arguments);
+                }else{
+                    $('#popup_iframe')[0].contentWindow.save();   
+                }
+            },
+            Cancel: function(){
+                $(document.body).popup({close:true});
+            }                              
+        },
+        title:title,
+        url:url,
+        width:width,
+        height:height
+    });
+}
+</script>

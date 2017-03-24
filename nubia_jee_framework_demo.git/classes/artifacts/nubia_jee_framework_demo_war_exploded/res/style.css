@@ -1,0 +1,73 @@
+body {
+	margin: 10px;
+}
+
+body, input, th, td, select, textarea {
+	font:12px/1.5 "\5FAE\8F6F\96C5\9ED1",tahoma,arial,sans-serif;
+	color: #333;
+}
+
+a {
+	text-decoration: underline;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+.ops a {
+    margin: 0 4px;
+}
+
+table {
+	margin: 10px;
+	border: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
+	background: #fff;
+}
+
+th, td {
+	border: 1px #ccc solid;
+	padding: 4px;
+	height: 16px;
+	line-height: 16px;
+}
+
+th {
+	background: #eee;
+	font-weight: 700;
+	text-align: left;
+}
+
+tr:hover {background:#efefef;}
+
+form {line-height:30px;}
+
+div.menu {
+	line-height: 24px;
+}
+
+div.menu a {
+	margin: 0 10px;
+}
+
+div.pager {
+	line-height: 30px;
+	margin: 0 10px;
+}
+
+div.pager  a {
+	margin: 0 1px;
+	padding: 2px 6px 4px 6px;
+	border: 1px #ccc solid;
+}
+
+div.pager  a:hover {
+	background: #eee;
+	text-decoration: none;
+}
+
+div.pager  a.active {
+	color: #f00;
+}

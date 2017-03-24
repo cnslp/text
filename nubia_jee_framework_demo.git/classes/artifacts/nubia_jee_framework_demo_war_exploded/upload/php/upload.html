@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>jQuery File Upload Demo</title>
+</head>
+<body>
+	<input id="files" type="file" name="files[]" multiple></input>
+	<ul>
+	</ul>
+<script src="res/js/jquery.js"></script>
+<script>
+	$.support.blobSlice = window.Blob && (Blob.prototype.slice ||
+        Blob.prototype.webkitSlice || Blob.prototype.mozSlice);
+		
+	var options = {
+		 _blobSlice: $.support.blobSlice && function () {
+            var slice = this.slice || this.webkitSlice || this.mozSlice;
+            return slice.apply(this, arguments);
+        }
+	};
+	
+	$('#files').on('change',function(e){
+		var event = e || window.event;
+		var files = event.target.files || event.dataTransfer.files;
+		
+		
+		
+		/*for (var i = 0; i <files.length; i++) {
+            upload(files[i]);
+            alert(files[i]);
+		}*/
+		
+		upload(files[0]);
+    });
+	
+	function upload(file) {
+		var url = "upload.php",
+			ub = 0,
+			mcs = 1 * 1024 * 1024 * 1024,
+			startposition = 0,
+			endposition = 0,
+			reader = new FileReader();
+			
+		reader.onloadend = (function(file) {
+			$('<li>filesize: '+ (file.size/1024).toFixed(2) + 'K & filename: ' + file.name + '</li>').appendTo('ul');
+			var xhr = new XMLHttpRequest();
+			
+			endposition = ub + mcs;
+			startposition = 0;
+			var blob = options._blobSlice.call(
+				file,
+				startposition,
+				endposition,
+				file.type
+			);
+			var contentRange = 'bytes ' + startposition + '-' + (endposition-1) + '/' + file.size;
+			
+			var formData = new FormData();
+			formData.append('files', blob);
+			formData.append('filename', file.name);
+			xhr.upload.onprogress = function(e) {
+				console.log('progress', e.loaded,e.total,e.loaded / e.total);
+			}
+			xhr.onload = function(e) {
+                formData = null;
+				if (endposition < file.size) {
+					startposition = endposition;
+					endposition = startposition + mcs;
+					if (endposition > file.size)
+						endposition = file.size;
+					//console.log(endposition - startposition);
+					blob = options._blobSlice.call(
+						file,
+						startposition,
+						endposition,
+						file.type
+					);
+					formData = new FormData();
+					formData.append('files', blob);
+					formData.append('filename', file.name);
+					xhr.open("POST", url, true);
+					contentRange = 'bytes ' + startposition + '-' + (endposition-1) + '/' + file.size;
+					xhr.setRequestHeader('Content-Range',contentRange);
+					xhr.send(formData);
+					blob = null;
+					console.log('part_finish');
+				} else {
+					console.log('all_finish');
+					return;
+				}
+			}
+			xhr.open("POST", url, true);
+			//var boundary = '---------------------------' + new Date().getTime();
+			//xhr.setRequestHeader('Content-Type','multipart/form-data; boundary='+boundary);
+			xhr.setRequestHeader('Content-Range',contentRange);
+			xhr.send(formData);
+			// Blob reference is not needed anymore, free memory:
+			blob = null;
+		})(file);
+	}
+</script>
+</body> 
+</html>

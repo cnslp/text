@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+<body>
+    <form action = "uploader_file_by_slice" method="post" enctype="multipart/form-data">
+        <input id="files" type="file" name="files[]" multiple="multiple"><br>
+        <input type="text" name="username" id="username" value="jxva"> <br> 
+        <input type="text" name="password" id="password" value="123456"> <br> 
+    </form>
+    <ul></ul>
+    <script src="../res/js/jquery.js"></script>
+    <script>
+        var url = 'uploader_files_by_html5_slice.do';
+        
+        $.support.blobSlice = window.Blob && (Blob.prototype.slice ||
+            Blob.prototype.webkitSlice || Blob.prototype.mozSlice);
+            
+            var options = {
+                 _blobSlice: $.support.blobSlice && function () {
+                    var slice = this.slice || this.webkitSlice || this.mozSlice;
+                    return slice.apply(this, arguments);
+                }
+            };
+        
+        $('#files').on('change',function(e){
+            var event = e || window.event;
+            var files = event.target.files || event.dataTransfer.files;
+            
+            for (var i = 0; i <files.length; i++) {
+                upload(files[i]);
+            }
+        });
+        
+        function upload(file){
+           var  ub = 0,
+            mcs = 10 * 1024, // 10KB
+            startposition = 0,
+            endposition = file.size;
+            
+            var filename = file.name;
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(e) { 
+                var  blob = options._blobSlice.call(
+                        file,
+                        startposition,
+                        endposition,
+                        file.type
+                    );
+                    formData = new FormData();
+                    blob.name = file.name;
+                    formData.append('filename', filename);
+                    formData.append('files', blob);
+                    formData.append("username", document.getElementById('username').value);  
+                    formData.append("password", document.getElementById('password').value);
+                        
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', url, true);
+                    contentRange = 'bytes ' + startposition + '-' + (endposition-1) + '/' + file.size;
+                    xhr.setRequestHeader('Content-Range',contentRange);
+                    xhr.send(formData);
+                    blob = null;
+                    xhr = null;
+            }
+        }
+    </script>
+</body>
+</html>

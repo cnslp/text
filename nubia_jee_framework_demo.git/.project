@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>nubia_jee_framework_demo</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<variableList>
+		<variable>
+			<name>NUBIA_JEE_FRAMEWORK_SRC</name>
+			<value>file:/E:/eclipse_jee/workspace/nubia_jee_framework/src</value>
+		</variable>
+	</variableList>
+</projectDescription>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8">
+
+<title>HTML5大文件分片上传示例</title>
+
+<script src="../res/js/jquery.js"></script>
+
+<script>
+    function upload() {
+            var files = document.getElementById('files').files;
+           for (var i = 0; i <files.length; i++) {
+                var file =  files[i];
+                var name = file.name;
+                var size = file.size;
+                var upload_shard_count = 0;
+                console.log(name);
+
+                var shardSize =  10 * 1024; //以10KB为一个分片
+                var shardCount = Math.ceil(size / shardSize); //总片数
+
+                for (var k = 0; k < shardCount; k++) {
+                    var start = k * shardSize;
+                    var end = Math.min(size, start + shardSize);
+                    var form = new FormData();
+                    form.append("Filedata", name);
+                    form.append("data", file.slice(start, end)); 
+                    //form.append("total", shardCount); //总片数
+                   // form.append("index", k+ 1); //当前是第几片
+                    //console.log(start+"="+ end);
+                    var contentRange = 'bytes ' + start + '-' + (end-1) + '/' + file.size;
+                    //xhr.setRequestHeader('Content-Range',contentRange);
+
+                    /*
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', 'uploader_files_by_html5_slice', false);
+                    xhr.setRequestHeader('Content-Range',contentRange);
+                    xhr.send(form);
+                    xhr = null;
+                    */
+                    
+                    upload_shard_count++;
+                    $("#output").text((i+1) + " / " + upload_shard_count);
+                    
+                    $.ajax({
+                        url : 'uploader_files_by_html5_slice.do',
+                        type : 'POST',
+                        headers: { 'Content-Range': contentRange },
+                        data : form,
+                        async : false,
+                        processData : false, //很重要，告诉jquery不要对form进行处理
+                        contentType : false, //很重要，指定为false才能形成正确的Content-Type
+                        success : function() {
+                            //nothing
+                        }
+                    }); 
+                } //for 
+            }//for
+        } 
+</script>
+
+</head>
+
+<body>
+
+    <input id="files" type="file" name="files[]" multiple="multiple"><br>
+    
+    <button id="upload" onclick="upload();">上传</button>
+
+    <span id="output" style="font-size: 12px">等待</span>
+
+</body>
+
+</html>
